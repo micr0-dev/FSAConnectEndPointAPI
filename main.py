@@ -4,6 +4,9 @@ from requests import Session
 from bs4 import BeautifulSoup as bs
 from string import digits
 import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.io as pio
+import pandas as pd
 
 
 def pullGrades(username: str, password: str) -> dict:
@@ -147,7 +150,7 @@ def pullAssignments(username, password) -> dict:
         plt.close()
 
 
-from flask import Flask, jsonify, send_file
+from flask import Flask, jsonify, send_file, render_template_string
 
 app = Flask(__name__)
 
@@ -168,6 +171,51 @@ def get_grades_graph(username, password):
 
     # Send the binary image object as the response
     return send_file(image_obj, mimetype="image/png")
+
+
+@app.route("/gradesEmbed/<username>/<password>", methods=["GET"])
+def get_grades_embed(username, password):
+    # Example: Create a DataFrame with sample grades data
+    # Replace this with the actual logic to retrieve grades
+    df = pd.DataFrame(
+        {
+            "Subject": ["Math", "Science", "History", "English"],
+            "Grades": [90, 85, 78, 88],
+        }
+    )
+
+    # Create a Plotly figure using the DataFrame
+    fig = px.bar(df, x="Subject", y="Grades", title="Your Grades")
+
+    # Convert the Plotly figure to HTML
+    graph_html = pio.to_html(fig, include_plotlyjs="cdn", full_html=False)
+
+    # Define the HTML to be embedded
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Grades Widget</title>
+        <style>
+            body {{
+                margin: 0;
+                padding: 0;
+            }}
+            .graph {{
+                width: 100%;
+                height: 100%;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="graph">
+            {graph_html}
+        </div>
+    </body>
+    </html>
+    """
+
+    return render_template_string(html)
 
 
 @app.route("/assignments/<username>/<password>", methods=["GET"])
