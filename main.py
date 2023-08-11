@@ -177,12 +177,17 @@ def get_grades_graph(username, password):
 def get_grades_embed(username, password):
     # Example: Create a DataFrame with sample grades data
     # Replace this with the actual logic to retrieve grades
-    df = pd.DataFrame(
-        {
-            "Subject": ["Math", "Science", "History", "English"],
-            "Grades": [90, 85, 78, 88],
-        }
-    )
+    # df = pd.DataFrame(
+    #     {
+    #         "Subject": ["Math", "Science", "History", "English"],
+    #         "Grades": [90, 85, 78, 88],
+    #     }
+    # )
+
+    grades_dict = pullGrades(username, password)
+
+    # Create a DataFrame from the grades dictionary
+    df = pd.DataFrame(list(grades_dict.items()), columns=["Subject", "Grades"])
 
     # Create a Plotly figure using the DataFrame
     fig = px.bar(df, x="Subject", y="Grades", title="Your Grades")
