@@ -7,8 +7,37 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.io as pio
 import pandas as pd
+import time
+from functools import lru_cache
+from datetime import datetime, timedelta
 
 
+class timed_lru_cache:
+    def __init__(self, maxsize=100, ttl=300):
+        self.cache = {}
+        self.maxsize = maxsize
+        self.ttl = ttl  # time to live in seconds
+
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            key = (args, tuple(kwargs.items()))
+            # Check if the cache is full
+            if len(self.cache) >= self.maxsize:
+                self.cache.pop(next(iter(self.cache)))
+            # Check for cached result and ttl
+            if key in self.cache:
+                result, timestamp = self.cache[key]
+                if datetime.now() - timestamp < timedelta(seconds=self.ttl):
+                    return result
+            # Compute and cache the result
+            result = func(*args, **kwargs)
+            self.cache[key] = (result, datetime.now())
+            return result
+
+        return wrapper
+
+
+@timed_lru_cache(maxsize=4, ttl=600)  # Cache for 10 minutes
 def pullGrades(username: str, password: str) -> dict:
     """
     Pull the grades for the given username and password.
@@ -18,9 +47,14 @@ def pullGrades(username: str, password: str) -> dict:
     :return: dictionary of grades where the key is string course and the value is float grade
     """
 
+    # start_time = time.time()
+
     # print("logging in..")
     with Session() as s:
+        # site_start_time = time.time()
+
         site = s.get("https://fultonscienceacademy.radixlms.com/login/")
+        # print(f"Getting the site took {time.time() - site_start_time} seconds")
         bs_content = bs(site.content, "html.parser")
         token = bs_content.find("input", {"name": "logintoken"})["value"]
         login_data = {
@@ -29,10 +63,14 @@ def pullGrades(username: str, password: str) -> dict:
             "logintoken": token,
             "anchor": "",
         }
+        # post_start_time = time.time()
         s.post("https://fultonscienceacademy.radixlms.com/login/index.php", login_data)
+        # print(f"Posting the site took {time.time() - post_start_time} seconds")
         grade_page = s.get(
             "https://fultonscienceacademy.radixlms.com/grade/report/overview/"
         )
+        # print(f"Fetching login page took {time.time() - site_start_time} seconds")
+
         grade_content = bs(grade_page.content, "html.parser")
         grades = grade_content.find_all("tr", id=lambda x: x and x.startswith("grade-"))
 
@@ -60,6 +98,10 @@ def pullGrades(username: str, password: str) -> dict:
                     .replace(")", "")
                     .replace("  ", "")
                 ] = float(substring)
+
+    # end_time = time.time()
+    # print(f"pullGrades took {end_time - start_time} seconds in total")
+
     return gradesDict
 
 
