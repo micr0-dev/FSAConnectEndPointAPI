@@ -2,7 +2,7 @@
 
 ## Description
 
-This project allows users to fetch their grades from the Fulton Science Academy Connect. It's designed with efficiency in mind and implements a caching mechanism to improve response times.
+This project allows users to fetch their grades from the Fulton Science Academy Connect. It's designed with efficiency in mind and implements a caching mechanism to improve response times. This project can be used in many places but the original intention is for **Notion widgets**.
 
 ## Usage
 
