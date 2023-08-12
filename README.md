@@ -50,4 +50,4 @@ If you'd like to contribute, please fork the repository and use a feature branch
 
 This project is licensed under the GNU General Public License v3.0. This ensures that the software is free to use, modify, and distribute, and that any derivative works are also under the same license.
 
-Please see the [LICENSE](LICENSE) file in the project's repository for the full text of the license, or you can [read it online here](https://www.gnu.org/licenses/gpl-3.0.en.html).
+Please see the [LICENSE](./LICENSE.md) file in the project's repository for the full text of the license, or you can [read it online here](https://www.gnu.org/licenses/gpl-3.0.en.html).
