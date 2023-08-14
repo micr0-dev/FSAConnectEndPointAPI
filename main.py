@@ -234,6 +234,18 @@ def get_grades_embed(username, password):
     # Create a Plotly figure using the DataFrame
     fig = px.bar(df, x="Subject", y="Grades", title="Your Grades")
 
+    # Round the grades and add them as text annotations on top of the bars
+    for index, row in df.iterrows():
+        fig.add_trace(
+            go.Scatter(
+                x=[row["Subject"]],
+                y=[row["Grades"]],
+                text=[str(int(round(row["Grades"])))],
+                mode="text",
+                showlegend=False,
+            )
+        )
+
     # Convert the Plotly figure to HTML
     graph_html = pio.to_html(fig, include_plotlyjs="cdn", full_html=False)
 
