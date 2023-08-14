@@ -240,7 +240,7 @@ def get_grades_embed(username, password):
         fig.add_trace(
             go.Scatter(
                 x=[row["Subject"]],
-                y=[row["Grades"]] + [5],
+                y=[row["Grades"] + 5],
                 text=[str(int(round(row["Grades"])))],
                 mode="text",
                 showlegend=False,
