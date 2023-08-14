@@ -10,6 +10,7 @@ import pandas as pd
 import time
 from functools import lru_cache
 from datetime import datetime, timedelta
+import plotly.graph_objects as go
 
 
 class timed_lru_cache:
