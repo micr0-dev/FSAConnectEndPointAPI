@@ -46,6 +46,9 @@ Replace `<username>` and `<password>` with the appropriate login credentials for
 
 If you'd like to contribute, please fork the repository and use a feature branch. Pull requests are warmly welcomed.
 
+## Credits
+Part of the actually pulling of grades for the API is done by [kyros](https://github.com/heykyros/), he is also the one who initially figured out how to login and get access to fsaconnect.
+
 ## License
 
 This project is licensed under the GNU General Public License v3.0. This ensures that the software is free to use, modify, and distribute, and that any derivative works are also under the same license.
